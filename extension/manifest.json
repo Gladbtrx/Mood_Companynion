@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Mood Companion — 本地风格控制器",
+  "version": "0.1.0",
+  "description": "课程演示项目：拦截输入、注入本地生成的风格指令、抽取隐藏度量标签。仅供个人本机使用，请勿分发。",
+  "permissions": ["storage"],
+  "action": {
+    "default_title": "Mood Companion（点击打开应急求助面板）"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": [
+        "config.js",
+        "lib/tagParser.js",
+        "lib/wsClient.js",
+        "lib/crisisPanel.js",
+        "adapters/gemini.js",
+        "content.js"
+      ],
+      "css": ["ui/panel.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

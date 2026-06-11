@@ -1,0 +1,19 @@
+# 阶段 4 夜间训练依赖（主线 RWR = train.py；选做支路 DPO = train_dpo.py）。
+#
+# 分两档安装：
+#   - 仅跑数据集/调度/mock 训练（本仓库默认演示路径）：无需任何第三方包，
+#     dataset.py / train.py --mock / scheduler.py 用纯标准库即可运行。
+#   - 真 QLoRA 训练（需 NVIDIA GPU）：安装下列全部。
+#
+# 真训练栈（GPU 必需）
+torch>=2.3            # 按你的 CUDA 版本从 pytorch.org 选轮子
+transformers>=4.44
+peft>=0.12           # LoRA / QLoRA（RWR 主线 + DPO 支路都用）
+datasets>=2.20
+bitsandbytes>=0.43   # 4bit NF4 量化（QLoRA）
+accelerate>=0.33
+trl>=0.11            # 仅 DPO 选做支路需要（DPOTrainer / DPOConfig）
+
+# 可选：bucketer="embedding" 时的语义分桶
+sentence-transformers>=3.0
+scikit-learn>=1.4

@@ -1,0 +1,28 @@
+[package]
+name = "mood-backend-core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "mood_backend_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mood-backend"
+path = "src/bin/server.rs"
+
+[[bin]]
+name = "smoke"
+path = "src/bin/smoke.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.23"
+futures-util = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.31", features = ["bundled"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+anyhow = "1"
+chrono = "0.4"
+async-trait = "0.1"

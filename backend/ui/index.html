@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Mood Companion — 本地风格控制器</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 680px; margin: 24px auto; padding: 0 16px; color: #222; }
+  h1 { font-size: 20px; }
+  .status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 13px; color: #fff; }
+  .on  { background: #2b8a3e; }
+  .off { background: #c92a2a; }
+  textarea { width: 100%; height: 64px; font-size: 14px; box-sizing: border-box; }
+  button { padding: 8px 18px; font-size: 14px; cursor: pointer; }
+  pre { background: #f4f4f4; padding: 12px; border-radius: 8px; overflow: auto; font-size: 12px; }
+  .privacy { font-size: 12px; color: #666; border-left: 3px solid #888; padding-left: 10px; line-height: 1.7; }
+</style>
+</head>
+<body>
+  <h1>Mood Companion <span id="st" class="status off">后端连接中…</span></h1>
+
+  <!-- 隐私口径（第 1 节）：只许说"个性化/训练数据本地"，不得说"对话 100% 隐私" -->
+  <p class="privacy">
+    隐私说明：你的人格配置、行为日志、奖励数据与模型训练<strong>全部保留在本机</strong>。
+    但经过改写的消息仍会发送到云端 LLM 服务商——本工具<strong>不能</strong>使对话内容对云端不可见。
+    本项目为课程演示 / 个人本机使用。
+  </p>
+
+  <h2 style="font-size:16px">创建人格（模块 A：冷启动）</h2>
+  <p>用一句话描述你理想的陪伴对象，本地 Qwen 会扩写为结构化人格配置：</p>
+  <textarea id="oneliner" placeholder="例：一个嘴上嫌弃我、心里其实很在乎我的青梅竹马"></textarea>
+  <p><button id="create">生成人格配置</button> <span id="hint"></span></p>
+  <pre id="out">（生成结果将显示在这里）</pre>
+
+<script>
+  // UI 与扩展共用同一 WS 契约；token 与 config/backend.json 保持一致
+  const WS_URL = "ws://127.0.0.1:8765";
+  const TOKEN = "mood-companion-dev-token";
+  let ws, seq = 0, pending = {};
+
+  function connect() {
+    ws = new WebSocket(WS_URL);
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: "auth", token: TOKEN }));
+      setSt(true);
+    };
+    ws.onclose = () => { setSt(false); setTimeout(connect, 2000); };
+    ws.onmessage = (ev) => {
+      const m = JSON.parse(ev.data);
+      if (m.req_id && pending[m.req_id]) { pending[m.req_id](m); delete pending[m.req_id]; }
+    };
+  }
+  function setSt(on) {
+    const el = document.getElementById("st");
+    el.textContent = on ? "后端在线" : "后端离线";
+    el.className = "status " + (on ? "on" : "off");
+  }
+  function request(type, payload) {
+    return new Promise((res, rej) => {
+      const req_id = "ui" + (++seq);
+      pending[req_id] = res;
+      setTimeout(() => { if (pending[req_id]) { delete pending[req_id]; rej(new Error("超时")); } }, 60000);
+      ws.send(JSON.stringify({ type, req_id, ...payload }));
+    });
+  }
+
+  document.getElementById("create").addEventListener("click", async () => {
+    const one_liner = document.getElementById("oneliner").value.trim();
+    if (!one_liner) return;
+    document.getElementById("hint").textContent = "本地推理中（1.5B 模型约需数秒）…";
+    try {
+      const r = await request("persona_create", { one_liner });
+      document.getElementById("out").textContent = JSON.stringify(r.config, null, 2);
+      document.getElementById("hint").textContent = r.used_fallback
+        ? "⚠️ 模型扩写 3 次未通过校验，已回退到内置默认模板"
+        : "✅ 已保存：" + r.persona_id;
+    } catch (e) {
+      document.getElementById("hint").textContent = "失败：" + e.message;
+    }
+  });
+
+  connect();
+</script>
+</body>
+</html>

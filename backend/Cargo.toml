@@ -1,0 +1,10 @@
+# 工作区只含 headless core。
+# src-tauri 故意不在 workspace 里：它需要 webkit2gtk 等 GUI 系统库，
+# 在无 GUI 的开发机上会让整个 workspace 无法构建。
+# 桌面端构建：cd src-tauri && cargo tauri build（见 docs/INSTALL.md）。
+[workspace]
+members = ["core"]
+resolver = "2"
+
+[profile.release]
+lto = true

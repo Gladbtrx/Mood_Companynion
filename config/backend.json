@@ -1,0 +1,60 @@
+{
+  "ws_host": "127.0.0.1",
+  "ws_port": 8765,
+  "ws_token": "mood-companion-dev-token",
+  "db_path": "data/mood.db",
+  "persona_dir": "data/personas",
+  "ollama_url": "http://127.0.0.1:11434",
+  "model_name": "qwen2.5:1.5b-instruct",
+  "style_temperature": 0.95,
+  "style_max_tokens": 120,
+  "persona_temperature": 0.3,
+  "reward": {
+    "w_copied": 1.0,
+    "w_engaged": 1.0,
+    "w_regen": 2.0,
+    "w_abandoned": 0.5,
+    "engaged_min_len": 8,
+    "engaged_max_latency_ms": 300000,
+    "k_cold_start": 20.0
+  },
+
+  "_comment_training": "阶段 4 夜间训练管线读取本节（主线 RWR=train.py，选做支路 DPO=train_dpo.py，见 ADR-2）；Rust BackendConfig 不声明该字段，serde 默认忽略未知键，故两侧共用同一文件而互不影响。",
+  "training": {
+    "enabled": true,
+    "base_model": "qwen2.5:1.5b-instruct",
+    "hf_base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "adapter_dir": "data/adapters",
+    "dataset_dir": "data/datasets",
+
+    "bucketer": "lexical",
+    "bucket_min_size": 2,
+    "holdout_frac": 0.2,
+
+    "rwr_beta": 0.3,
+    "rwr_w_max": 5.0,
+    "min_samples": 20,
+
+    "min_pairs": 16,
+    "pair_margin": 0.15,
+    "pair_topk": 3,
+
+    "dpo_beta": 0.1,
+    "learning_rate": 5e-5,
+    "epochs": 1,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "max_seq_len": 1024,
+
+    "proxy_min_accuracy": 0.5,
+    "proxy_regress_epsilon": 0.02,
+
+    "scheduler": {
+      "nightly_start_hour": 2,
+      "nightly_end_hour": 6,
+      "min_new_samples": 50,
+      "idle_required_secs": 600,
+      "check_interval_secs": 600
+    }
+  }
+}

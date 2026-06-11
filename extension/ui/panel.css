@@ -1,0 +1,105 @@
+/* 紧急安全港面板（模块 D）+ 状态角标样式 */
+
+#mc-crisis-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+#mc-crisis-panel .mc-crisis-card {
+  max-width: 520px;
+  width: calc(100% - 48px);
+  background: #fffdf7;
+  border: 3px solid #d9480f;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  color: #1f1f1f;
+}
+
+#mc-crisis-panel .mc-crisis-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c92a2a;
+  margin-bottom: 10px;
+}
+
+#mc-crisis-panel .mc-crisis-disclaimer {
+  font-size: 14px;
+  line-height: 1.6;
+  background: #fff4e6;
+  border-left: 4px solid #d9480f;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+}
+
+#mc-crisis-panel .mc-crisis-list {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+#mc-crisis-panel .mc-crisis-contact {
+  font-weight: 700;
+  color: #1864ab;
+  user-select: all;
+}
+
+#mc-crisis-panel .mc-crisis-note {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 14px;
+}
+
+#mc-crisis-panel .mc-crisis-close {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #1864ab;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 安全港出口：退出安抚语气、恢复日常人设（模块 D） */
+#mc-crisis-panel .mc-crisis-exit-safe {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #adb5bd;
+  border-radius: 8px;
+  background: #f1f3f5;
+  color: #495057;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 流式输出开头疑似半个隐藏标签时，临时遮蔽首行避免闪现（tagParser.looksLikeStreamingTagPrefix） */
+.mc-tag-streaming-mask {
+  visibility: hidden;
+}
+
+/* 风格控制器离线时的页面内小角标（模块 B 降级提示） */
+#mc-offline-badge {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2147483646;
+  background: #c92a2a;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-family: system-ui, sans-serif;
+  opacity: 0.92;
+  pointer-events: none;
+}

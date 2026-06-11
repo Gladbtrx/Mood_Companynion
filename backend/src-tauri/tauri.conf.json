@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Mood Companion",
+  "version": "0.1.0",
+  "identifier": "local.coursework.mood-companion",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Mood Companion — 本地风格控制器",
+        "width": 760,
+        "height": 640
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ws://127.0.0.1:8765; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": false
+  }
+}

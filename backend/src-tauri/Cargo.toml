@@ -1,0 +1,19 @@
+# Tauri 桌面壳（薄壳：只负责窗口 + 托管 headless core）。
+# ⚠️ 本 crate 故意不在上级 workspace 中：构建需要系统 GUI 库
+#   （Ubuntu: libwebkit2gtk-4.1-dev libgtk-3-dev 等，见 docs/INSTALL.md）。
+# 构建：cargo install tauri-cli && cd backend/src-tauri && cargo tauri build
+[package]
+name = "mood-companion-desktop"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+mood-backend-core = { path = "../core" }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+
+[workspace]
